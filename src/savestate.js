@@ -12,8 +12,8 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "0.58"
-export const productive = false
+export const version = "0.59d"
+export const productive = true
 
 export const newSave = {
     version: version,
