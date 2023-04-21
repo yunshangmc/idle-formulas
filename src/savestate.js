@@ -12,7 +12,7 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "0.61"
+export const version = "1.00"
 export const productive = true
 export var invitation = "efHyDkqGRZ"
 
