@@ -81,7 +81,7 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
 
     const abortAlphaReset = ()=>{
       popup.confirm(state.insideChallenge ? "Abort run and exit the current Challenge?" : "Abort the current Alpha Run?",()=>{
-        popup.confirm("Are you really sure?",()=>{
+        popup.confirm("Do you really want to abort the run?",()=>{
           updateState({name: "alphaReset", isAbort: true})
           setTotalClicks((x)=>x+1)
         }, state.settings.alphaAbortPopup !== "DOUBLE")

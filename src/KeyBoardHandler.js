@@ -6,7 +6,7 @@ export default function KeyBoardHandler({state, updateState, popup}) {
     if (popup?.popupState?.visible) return undefined
 
     const hotkeyApplyFormulaDown = (keyName, e, handle) => {
-        const index = keyName - 1
+        const index = keyName.replace("num_", "") - 1
         if (index >= state.myFormulas.length) return
 
         const formula = formulaList[state.myFormulas[index]]
@@ -52,7 +52,7 @@ export default function KeyBoardHandler({state, updateState, popup}) {
 
 
     return <>
-        <Hotkeys keyName="1,2,3,4,5"  disabled={state.settings.hotkeyApplyFormula === "OFF"} onKeyDown={hotkeyApplyFormulaDown} onKeyUp={hotkeyApplyFormulaUp} allowRepeat={true}/>
+        <Hotkeys keyName="1,2,3,4,5,num_1,num_2,num_3,num_4,num_5" disabled={state.settings.hotkeyApplyFormula === "OFF"} onKeyDown={hotkeyApplyFormulaDown} onKeyUp={hotkeyApplyFormulaUp} allowRepeat={true}/>
         <Hotkeys keyName="b" disabled={state.settings.hotkeyBasicReset === "OFF"} onKeyDown={hotkeyBasicReset}/>
         <Hotkeys keyName="x" disabled={state.settings.hotkeyXReset === "OFF"} onKeyDown={hotkeyXReset}/>
         <Hotkeys keyName="a" disabled={state.settings.hotkeyAlphaReset === "OFF"} onKeyDown={hotkeyAlphaReset}/>
