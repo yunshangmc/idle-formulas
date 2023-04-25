@@ -12,7 +12,7 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "1.01"
+export const version = "1.02"
 export const productive = true
 export var invitation = "efHyDkqGRZ"
 
@@ -964,10 +964,10 @@ export const saveReducer = (state, action)=>{
         let isNew = !state.completedEndings[action.endingName]
         state.completedEndings[action.endingName] = true
         performXReset(state)
-        if (isNew && action.endingName !== "world")
-            notify.success("Ending Completed", endingList[action.endingName].title)
+        if (isNew && action.endingName !== "world" && endingList[action.endingName]?.titlestring)
+            notify.success("Ending Completed", endingList[action.endingName].titlestring)
         state.currentEnding = ""
-        if ((action.endingName === "world" || (action.endingName === "true" && state.destinyStars > 1))&& state.progressionLayer <= 2) {
+        if ((action.endingName === "world" || (action.endingName === "true" && state.destinyStars > 1)) && state.progressionLayer < 2) {
             state.progressionLayer = 2
             state.destinyEndTimeStamp = Date.now()
             state.mailsForCheck.push("Destiny")
@@ -984,7 +984,7 @@ export const saveReducer = (state, action)=>{
         }
         break;
     case "claimFirstStar":
-        state.destinyStars = 1
+        state.destinyStars = Math.max(state.destinyStars, 1)
         break;
     case "performDestinyReset":
         state.destinyStars += 1
