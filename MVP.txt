@@ -4,6 +4,31 @@
 
 ~~~~~~~~~~~MEDIUM~~~~~~~~~~~
 
+Research All Button unlocked via Mail, with hotkey R
+
 ~~~~~~~~~~~~~LOW~~~~~~~~~~~~
 
+Deal with unintended strategy: Early Greatest Wish
+Deal with unintended strategy: Early Green Bar
+
 ~~~~~~~~~~~VERYLOW~~~~~~~~~~
+
+
+============DONE=============
+
+Changes:
+Target to fill the green bar is shown when almost done
+Reduced delays for some mails
+Fastest times now show decimals when below 1 minute
+Alpha Target Dropdown only contains Options up to one beyond highscore
+New Option to switch value displayed in Header
+Popups for Alpha Upgrades and Starting Stones close when clicking outside
+Description for Starting Stones also shown in tooltip
+
+Fixes:
+Offline Progress Popup respects Number Format setting
+Fixed spelling mistake: happyness -> happiness
+Fixed dollar symbol order: 150$ -> $150
+Toggle Auto Hotkey actually does something now
+Fixed bug that allowed increasing Starting Stones beyond limit by fast clicking
+Timewall requirement now works as described

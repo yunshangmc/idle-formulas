@@ -92,6 +92,7 @@ export const newSave = {
     startingStoneLevel:{},
     startingStoneMode:1, //1 Increment, 0 Description, -1 Decrement
     startingStoneX: 0,
+    clearedTimewall: false,
     baseAlphaLevel: 0,
     currentEnding: "",
     completedEndings: {},
@@ -115,6 +116,7 @@ export const newSave = {
         xResetPopup: "ON",
         autoSave: "ON",
         autoLoad: "ON",
+        headerDisplay: "X",
         numberFormat: "LETTER",
         shopPrices: "ON",
         showHints: "ON",
@@ -335,6 +337,8 @@ const giveAlphaRewards = (state)=>{
         state.passiveAlphaTime = Math.min(state.passiveAlphaTime, state.bestAlphaTime)
         state.passiveAlphaInterval = Math.min(state.passiveAlphaInterval, getRewardInterval(1, state.bestAlphaTime, getGlobalMultiplier(state)))
         state.xHighScores[state.highestXTier] = Math.max(state.xHighScores[state.highestXTier], state.xValue[0])
+        if ((state.xValue[0] >= 1e110 && state.alpha >= 5e9))
+            state.clearedTimewall = true
     }
     return state
 }
@@ -684,9 +688,9 @@ export const saveReducer = (state, action)=>{
         //Offline Progress Popup
         if (deltaMilliSeconds > 120000 && (state.settings.offlineProgressPopup === "ON" || (state.settings.offlineProgressPopup === "LAUNCH" && state.justLaunched))){
             const timeText = <>You were away for {secondsToHms(Math.floor(deltaMilliSeconds / 1000))}</>
-            const xText = state.insideChallenge ? <></> : getOfflinePopupLine(<>x</>, xBefore, state.xValue[0], state.numberFormat)
-            const aText = getOfflinePopupLine(<>&alpha;</>, aBefore, state.alpha, state.numberFormat)
-            const sText = getOfflinePopupLine(<>&lambda;</>, sBefore, state.starLight, state.numberFormat)
+            const xText = state.insideChallenge ? <></> : getOfflinePopupLine(<>x</>, xBefore, state.xValue[0], state.settings.numberFormat)
+            const aText = getOfflinePopupLine(<>&alpha;</>, aBefore, state.alpha, state.settings.numberFormat)
+            const sText = getOfflinePopupLine(<>&lambda;</>, sBefore, state.starLight, state.settings.numberFormat)
             popup.alert(<>{timeText}{xText}{aText}{sText}</>)
         }
 

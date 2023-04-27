@@ -41,7 +41,7 @@ export default function KeyBoardHandler({state, updateState, popup}) {
     }
 
     const hotkeyToggleAuto = (keyName, e, handle) => {
-        updateState({name:"toggleAutoApply"})
+        updateState({name:"toggleAutoApply", all:true})
     }
 
     const hotkeyAbortRun = (keyName, e, handle) => {

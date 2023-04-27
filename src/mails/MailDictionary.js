@@ -472,7 +472,7 @@ export const mailDictionary = {
     "Transfer":{ //Transfer minigame
         id: "Transfer",
         title: "Re: How can I give you?",
-        content: <>Transfer money. 150$! Have only one day. But must not be suspicious. Must transfer only one dollar at a time!</>,
+        content: <>Transfer money. $150! Have only one day. But must not be suspicious. Must transfer only one dollar at a time!</>,
         getProgress: ()=>0,
         responses: [<>Transferred nothing</>, <>Transferred too little</>, <>Transferred enough</>, <>Transferred waaay too much</>],
         sender: "Prince",
@@ -504,7 +504,7 @@ export const mailDictionary = {
         check: (state)=>(true),
         delay: 3000,
         afterComplete: [["Virus"],[]],
-        timeout: 86400,
+        timeout: 36000,
         getTimeoutReply: ()=>1
     },
     "Failed":{
@@ -518,7 +518,7 @@ export const mailDictionary = {
         check: (state)=>(true),
         delay: 3000,
         afterComplete: [["Virus"],[]],
-        timeout: 86400,
+        timeout: 36000,
         getTimeoutReply: ()=>1
     },
     "Virus":{
@@ -569,7 +569,7 @@ export const mailDictionary = {
         content: <>Hi, I hope you are enjoying this game! Please take a moment and rate your experience on a scale of 1 to 5 stars.</>,
         sender: "Dev",
         check: (state)=>(true),
-        delay: 80000,
+        delay: 60000,
         afterComplete: [["Submitted"]],
         rating: true,
     },
@@ -592,13 +592,13 @@ export const mailDictionary = {
         check: (state)=>(true),
         delay: 20,
     },
-    "Results":{ //Make result vary by User Input
+    "Results":{
         id: "Results",
         title: "Survey Results",
         content: <>Here are the latest results of the survey:</>,
         sender: "Dev",
         check: (state)=>(true),
-        delay: 120000,
+        delay: 100000,
         surveyresult: true,
     },
 

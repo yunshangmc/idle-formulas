@@ -3,6 +3,7 @@ import { Buffer } from "buffer";
 import {invitation, productive, save, version} from './savestate'
 import {spaces, notify, secondsToHms} from './utilities'
 import MultiOptionButton from './MultiOptionButton'
+import DropdownOptionButton from "./DropdownOptionButton";
 
 export default function OptionScreen({state, popup, updateState, setTotalClicks}) {
   const saveGame = ()=>{
@@ -76,7 +77,12 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
       </p><p>
         {/* {spaces()}<MultiOptionButton settingName="offlineProgress" statusList={["ON","ACTIVE","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
           description="Offline Progress" tooltip="Controls whether the game calculates progress for offline/inactive time" tooltipList={["Always get offline progress","No offline progress upon load, but inactive periods (minimized tab etc) are considered", "No offline progress, not even after inactive (minimized tab etc) periods of 2+ minutes"]}/> */}
-      </p><p>
+      </p>
+      {(state.destinyStars > 1 || state.progressionLayer > 0) && <p>
+        {spaces()}<DropdownOptionButton settingName="headerDisplay" statusList={["X","ALPHA",state.destinyStars > 1 && "STARS",state.destinyStars > 1 && "STARLIGHT", "OFF"].filter((x)=>x)} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+          description="Header Display" tooltip="Controls display at the top of the site"/>
+      </p>}
+      <p>
         {spaces()}<MultiOptionButton settingName="numberFormat" statusList={["LETTER","SCIENTIFIC","AMBIGUOUS"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
           description="Number Format" tooltip="Controls how numbers are displayed" tooltipList={["Use letters for thousands: K,M,B,T,Q,P,S,V,O,N,D","Use scientific notation", "Use ambigous notation"]}/>
       </p><p>

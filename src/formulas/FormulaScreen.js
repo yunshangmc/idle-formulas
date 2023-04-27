@@ -135,6 +135,8 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
     const progressBarWidth = Math.min(100 * Math.log10(Math.max(state.xValue[0],1)) / Math.log10(alphaTarget),99).toFixed(0) + "%"
 
     const alphaRewardTier = getAlphaRewardTier(state.xValue[0])
+    const xhs = state.xHighScores[3]
+    const alphaTargetList = ["MINIMUM","1e40",xhs >= 1e40 && "1e50",xhs >= 1e50 && "1e60",xhs >= 1e60 && "1e70",xhs >= 1e70 && "1e80",xhs >= 1e80 && "1e90",xhs >= 1e90 && "1e100"].filter((x)=>x)
 
     const nextUnlockCost = state.autoUnlockIndex < shopFormulas.length ? formulaList[shopFormulas[state.autoUnlockIndex]].unlockCost * getUnlockMultiplier(formulaList[shopFormulas[state.autoUnlockIndex]],state) : Infinity
 
@@ -213,7 +215,7 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
           
           {state.alphaUpgrades.ARES && <><MultiOptionButton disabled={state.activeChallenges.FULLYIDLE} settingName="autoResetterA" statusList={["ON","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
             description="Alpha Resetter"/></>}
-          {state.alphaUpgrades.ARES && <>{spaces()}<DropdownOptionButton disabled={state.activeChallenges.FULLYIDLE} settingName="alphaThreshold" statusList={["MINIMUM","1e40","1e50","1e60","1e70","1e80","1e90","1e100"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+          {state.alphaUpgrades.ARES && <>{spaces()}<DropdownOptionButton disabled={state.activeChallenges.FULLYIDLE} settingName="alphaThreshold" statusList={alphaTargetList} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
             description="Target"/></>}
           {(state.alphaUpgrades.SRES || state.alphaUpgrades.AREM) && <><br/><br/></>}
 
@@ -231,7 +233,7 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
             {state.progressionLayer >= 1 && state.highestXTier === 3 && !state.inNegativeSpace && !state.insideChallenge && state.xValue[0] >= alphaTarget && <p>Alpha Reset for {alphaRewardTier.alpha * Math.pow(2,state.baseAlphaLevel)} &alpha;.{alphaRewardTier.next && <>&nbsp;(Next: {alphaRewardTier.nextAlpha * Math.pow(2,state.baseAlphaLevel)} &alpha; at x={formatNumber(alphaRewardTier.next)})</>}</p>}
             {(state.progressionLayer > 0 || state.highestXTier > 0) && state.autoUnlockIndex < shopFormulas.length && state.xValue[0] < nextUnlockCost && (nextUnlockCost <= alphaTarget || state.progressionLayer > 0) && <p>Next Formula at x={formatNumber(nextUnlockCost, state.settings.numberFormat)}</p>}
             {(state.progressionLayer > 0 || state.highestXTier > 0) && state.autoUnlockIndex < shopFormulas.length && state.xValue[0] >= nextUnlockCost && <p>New Formula available</p>}
-            {state.progressionLayer === 0 && state.autoUnlockIndex < shopFormulas.length && nextUnlockCost > alphaTarget && <p>Almost done! Let's fill this bar!</p>}
+            {state.progressionLayer === 0 && state.autoUnlockIndex < shopFormulas.length && nextUnlockCost > alphaTarget && <p>Almost done! Let's fill this bar! (at x={formatNumber(alphaTarget, state.settings.numberFormat)})</p>}
             <p></p>
             {state.progressionLayer === 0 && (state.xValue[0] >= alphaTarget ?
                 <div><button onClick={performAlphaReset} style={{backgroundColor:"#99FF99", fontWeight:"bold", border:"2px solid", height:"25px", width:"280px"}}>

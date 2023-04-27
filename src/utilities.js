@@ -86,7 +86,7 @@ export const notify = {
     }
 }
 
-export const secondsToHms = (seconds)=>{
+export const secondsToHms = (seconds, showCentiseconds)=>{
     if (seconds === Infinity) return "Infinity"
     if (isNaN(seconds)) return "NaN"
 
@@ -95,11 +95,13 @@ export const secondsToHms = (seconds)=>{
     var h = Math.floor(seconds % (3600*24) / 3600);
     var m = Math.floor(seconds % 3600 / 60);
     var s = Math.floor(seconds % 60);
+    var cs = Math.floor((seconds * 100) % 100)
     
     var dDisplay = d > 0 ? d + "d" : "";
     var hDisplay = d > 0 || h > 0 ? h + "h": "";
     var mDisplay = d > 0 || h > 0 || m > 0 ? m + "m" : "";
-    var sDisplay = s + "s";
+    var csDisplay = showCentiseconds && seconds < 60 ? (cs < 10 ? ".0" : ".") + cs : ""
+    var sDisplay = s + csDisplay + "s";
     var hZero = dDisplay && h < 10 ? "0" : "";
     var mZero = hDisplay && m < 10 ? "0" : "";
     var sZero = mDisplay && s < 10 ? "0" : "";
