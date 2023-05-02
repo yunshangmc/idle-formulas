@@ -66,6 +66,7 @@ export default function Mail({state, mail, popup, updateState, mailid}) {
     }
 
     const unlockMail = ()=>{
+        if (state.alpha < mail.alphaCost) return
         updateState({name: "unlockMail", mailid})
     }
 

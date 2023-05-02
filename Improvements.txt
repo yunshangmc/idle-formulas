@@ -11,12 +11,14 @@ LOW: Favorite Dropdown cancels Hotkey (=> May need better hotkey package)
 LOW: Possible to skip need for Auto Applier in /x' Setup
 LOW: Rework per Second Display (accurate calculation instead of average over last ticks)
 LOW: Per Second Display should reflect Auto Applier at 2 applies per second
+LOW: Explain tick order in detail (Maybe glossary or just a mail)
 
 ~~~~~~~~~~~ALPHA~~~~~~~~~~~
 
 LOW: Back button to quit endings early
 LOW: Notification for new highscores
 LOW: Allow skipping Endings that are already completed
+LOW: Explain research in detail (Maybe glossary or just a mail)
 
 ~~~~~~~~~~DESTINY~~~~~~~~~~
 

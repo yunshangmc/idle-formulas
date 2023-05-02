@@ -99,15 +99,21 @@ const alphaUpgradeDictionary = {
     },
 }
 
-const applierRates = [2,5,10]
-const applierCosts = [1,3,10]
+const applierRates = [2,5,10, 10]
+const applierCosts = [1,3,10, Infinity]
 const applierLevel = state.autoApplyLevel
+let boughtSomething = false
+
 const upgradeApplierRate = ()=>{
+    if (boughtSomething || state.alpha < applierCosts[applierLevel + 1]) return
+    boughtSomething = true
     updateState({name:"upgradeApplierRate", level:applierLevel + 1, rate:applierRates[applierLevel + 1], cost:applierCosts[applierLevel + 1] })
 }
 const baseAlphaMultiplier = Math.pow(2,state.baseAlphaLevel)
 const baseAlphaUpgradeCost = Math.pow(5,state.baseAlphaLevel + 1)
 const upgradeBaseAlpha = ()=>{
+    if (boughtSomething || state.alpha < baseAlphaUpgradeCost) return
+    boughtSomething = true
     updateState({name:"upgradeBaseAlpha", level:state.baseAlphaLevel + 1, cost:baseAlphaUpgradeCost })
 }
 

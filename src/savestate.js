@@ -12,7 +12,7 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "1.02"
+export const version = "1.03"
 export const productive = true
 export var invitation = "efHyDkqGRZ"
 
@@ -64,6 +64,7 @@ export const newSave = {
     fileStartTimeStamp: -1,
     destinyStartTimeStamp: -1,
     destinyEndTimeStamp: -1,
+    destinyRecordMillis: 1e100,
     millisSinceAutoApply: 0,
     millisSinceCountdown: 0,
     mileStoneCount: 0,
@@ -337,7 +338,7 @@ const giveAlphaRewards = (state)=>{
         state.passiveAlphaTime = Math.min(state.passiveAlphaTime, state.bestAlphaTime)
         state.passiveAlphaInterval = Math.min(state.passiveAlphaInterval, getRewardInterval(1, state.bestAlphaTime, getGlobalMultiplier(state)))
         state.xHighScores[state.highestXTier] = Math.max(state.xHighScores[state.highestXTier], state.xValue[0])
-        if ((state.xValue[0] >= 1e110 && state.alpha >= 5e9))
+        if ((state.xValue[0] >= 1e110 && state.alpha >= 4e9))
             state.clearedTimewall = true
     }
     return state
@@ -974,6 +975,8 @@ export const saveReducer = (state, action)=>{
         if ((action.endingName === "world" || (action.endingName === "true" && state.destinyStars > 1)) && state.progressionLayer < 2) {
             state.progressionLayer = 2
             state.destinyEndTimeStamp = Date.now()
+            if (state.destinyStartTimeStamp > 0)
+                state.destinyRecordMillis = state.destinyEndTimeStamp - state.destinyStartTimeStamp
             state.mailsForCheck.push("Destiny")
             notify.success("DESTINY", "You finished the game!")
             performAlphaReset(state)

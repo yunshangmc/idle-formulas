@@ -183,10 +183,11 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
       <p>Version:&nbsp;&nbsp;{version}{!productive && <>&nbsp;&nbsp;[Development Build]</>}</p>
       {state.destinyStartTimeStamp > 0 && 
         (state.destinyEndTimeStamp > 0 ? 
-          <p>Playtime:&nbsp;&nbsp;{secondsToHms((state.destinyEndTimeStamp - state.destinyStartTimeStamp)/1000)}&nbsp;&nbsp;[Game Finished!]</p> 
+          <>Playtime:&nbsp;&nbsp;{secondsToHms((state.destinyEndTimeStamp - state.destinyStartTimeStamp)/1000)}&nbsp;&nbsp;[Game Finished!]</> 
         :
-          <p>Playtime:&nbsp;&nbsp;{secondsToHms((Date.now() - state.destinyStartTimeStamp)/1000)}</p>)
+          <>Playtime:&nbsp;&nbsp;{secondsToHms((Date.now() - state.destinyStartTimeStamp)/1000)}</>)
       }
+      {state.destinyStars > 1 && state.destinyRecordMillis <= 30*86400*1000 && <><br/>Record:&nbsp;&nbsp;{secondsToHms(state.destinyRecordMillis/1000)}</>}
       <p>This game is created by Zilvarro.</p>
       {state.mileStoneCount >= 3 ? 
         <p><a href={"https://discord.gg/" + invitation} target="_blank" rel="noopener noreferrer">Join the Discord Community</a></p>

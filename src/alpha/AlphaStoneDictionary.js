@@ -31,7 +31,7 @@ export const startingStones = {
     "Timewall":{
         id: "Timewall",
         title: "Timewall ",
-        description: <>&alpha;-Reset while having at least five billion Alpha and x=1e110</>,
+        description: <>&alpha;-Reset while having at least four billion Alpha and x=1e110</>,
         check: (state=>state.clearedTimewall),
     },
     "AllChallenges":{

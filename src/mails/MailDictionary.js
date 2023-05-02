@@ -75,7 +75,7 @@ export const mailDictionary = {
     "How":{
         id: "How",
         title: "But how???",
-        content: <>Hearing about the world formula, you may be wondering how to achieve such a state of mind, how to <i>discover</i> the World Formula for yourself. One must break out of the prison imposed by ones formulas. Find unlimited growth. Yearn for <b>Infinity</b>. Yet one must not just invent new formulas, instead one must <b>exploit the core of mathematics</b> to break free of the bounds which constrain ones conciousness.</>,
+        content: <>Hearing about the world formula, you may be wondering how to achieve such a state of mind, how to <i>discover</i> the World Formula for yourself. One must break out of the prison imposed by ones formulas. Find unlimited growth. Yearn for <b>Infinity</b>. Yet one must not just invent new formulas, instead one must <b>exploit the core of mathematics</b> to break free of the bounds which constrain ones conciousness. And those who get blinded by greed and stop being careful may end up stuck with infinitely many problems, or deep down in the depths of hell.</>,
         sender: "Mister Y",
         check: (state)=>(state.alpha >= 42),
         delay: 500,
@@ -385,7 +385,7 @@ export const mailDictionary = {
     "God":{
         id: "God",
         title: "Formula God",
-        content: <>Thank you for attempting the Formula God Challenge. That one is truly giving us nightmares. However, we are able to support you by boosting your Research speed proportional to your best scores in the Formula God Challenge. You can check this special boost on the Research tab. Keep trying and improving!</>,
+        content: <>Thank you for attempting the Formula God Challenge. That one is truly giving us nightmares. However, we are able to support you by multiplying your research speeds by your respective best scores in the Formula God Challenge. You can check this special boost on the Research tab. Keep trying and improving those highscores!</>,
         sender: "Academy",
         check: (state)=>(state.formulaGodScores[0] > 1),
         delay: 45
@@ -559,8 +559,19 @@ export const mailDictionary = {
         sender: "Dev",
         check: (state)=>(state.xValue[0] > 200e9 && state.highestXTier >= 2),
         delay: 60,
+        afterComplete: [["RoundDown"]],
+    },
+
+    "RoundDown":{
+        id: "RoundDown",
+        title: "Just a small hint",
+        content: <>Hi again, I hope you are doing well! Here's a small hint for you, since I have no idea where else to put it in the game: the result from applying a formula is generally rounded down (except for formulas that just add something to the current value). Maybe this will be helpful, or not, I don't know.</>,
+        sender: "Dev",
+        check: (state)=>(state.xValue[0] > 5e30 && state.highestXTier >= 3),
+        delay: 200,
         afterComplete: [[]],
     },
+    
     "Survey":{ //Star Survey Minigame
         id: "Survey",
         title: "Survey",
