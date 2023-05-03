@@ -22,6 +22,8 @@ LOW: Explain research in detail (Maybe glossary or just a mail)
 
 ~~~~~~~~~~DESTINY~~~~~~~~~~
 
+LOW: Allow enabling Destiny multiplier on single clicks
+
 ~~~~~~~~~~~MAILS~~~~~~~~~~~
 
 LOW: Chapter Completion Stats

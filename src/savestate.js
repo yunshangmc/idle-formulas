@@ -12,7 +12,7 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "1.03"
+export const version = "1.04"
 export const productive = true
 export var invitation = "efHyDkqGRZ"
 
@@ -294,7 +294,7 @@ const performAlphaReset = (state)=>{
 }
 
 const giveAlphaRewards = (state)=>{
-    if (state.xValue[0] < alphaTarget) {return state} //No rewards without the necessary points
+    if (state.xValue[0] < alphaTarget || state.inNegativeSpace) {return state} //No rewards
 
     //Initial Unlock of the Layer
     if (state.progressionLayer <= 0) {
@@ -794,7 +794,9 @@ export const saveReducer = (state, action)=>{
             state.autoApply = [false,false,false,false,false]
         }
 
-        giveAlphaRewards(state)
+        if (!action.isAbort)
+            giveAlphaRewards(state)
+
         performAlphaReset(state)
         performShopReset(state)
         rememberLoadout(state)

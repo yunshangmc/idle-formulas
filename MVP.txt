@@ -8,31 +8,12 @@ Research All Button unlocked via Mail, with hotkey R
 
 ~~~~~~~~~~~~~LOW~~~~~~~~~~~~
 
+Also show best x and Alpha in Options or Mail
+
 ~~~~~~~~~~~VERYLOW~~~~~~~~~~
 
 
 ============DONE=============
 
-Changes:
-Target to fill the green bar is shown when almost done
-Reduced delay for receiving some mails
-Added a new mail telling the player that most formula results are rounded down
-Fastest times now show decimals when below 1 minute
-log2(#F/#E) changed to log2(#B+#F/#E) and apply cost increased from 1e20 to 5e20
-Alpha Target Dropdown only contains Options up to one beyond highscore
-New Option to switch value displayed in Header
-Reformulated mail "Formula God" to make it more easily understandable
-Added small hint regarding bad endings to Mail "But how???"
-Popups for Alpha Upgrades and Starting Stones close when clicking outside
-Description for Starting Stones also shown in tooltip
-Reduced Alpha requirement for Timewall from five billion to four billion
-Game now tracks best time for getting the True Ending in Options
-
 Fixes:
-Offline Progress Popup respects Number Format setting
-Fixed spelling mistake: happyness -> happiness
-Fixed dollar symbol order: 150$ -> $150
-Toggle Auto Hotkey actually does something now
-Fixed bug that allowed increasing Starting Stones beyond limit by fast clicking
-Fixed bug where alpha cost would be deducted twice when clicking too fast
-Timewall requirement now works as described
+Googol should not be awarded in Negative Space

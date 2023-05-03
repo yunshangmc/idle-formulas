@@ -26,7 +26,6 @@ export const startingStones = {
         title: "Googol",
         description: <>&alpha;-Reset with x=1e100 or more</>,
         check: (state=>(state.xHighScores[3] >= 1e100)),
-        
     },
     "Timewall":{
         id: "Timewall",
