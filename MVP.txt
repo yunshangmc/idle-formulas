@@ -23,3 +23,4 @@ Fixed issue where importing a game would not apply defaults for new settings
 Save system now supports +/-Infinity values
 Show Apply Cost for Equipped Formulas in Shop when Shop Prices is turned on
 Minor adaptions to some texts
+Formulas beyond inventory size get kicked out of inventory

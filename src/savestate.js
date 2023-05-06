@@ -613,6 +613,10 @@ export const saveReducer = (state, action)=>{
             state.myFormulas = state.myFormulas.filter(formulaName => formulaList[formulaName]);
             state.holdAction = null
         }
+        //Kick out formulas beyond inventory size
+        if (state.myFormulas.length > getInventorySize(state)) {
+            state.myFormulas = state.myFormulas.slice(0, getInventorySize(state))
+        }
 
         state.calcTimeStamp = timeStamp
         state.justLaunched = false
