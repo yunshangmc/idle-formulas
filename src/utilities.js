@@ -156,3 +156,26 @@ export const numericSort = (numArray, descending)=>{
         return descending ? b - a: a - b;
     });
 }
+
+const stringifyFixer = (key, value)=>{
+    if (!key) 
+        return value
+    if (value === Infinity)
+        return "[!$+Infinity$!]"
+    if (value === -Infinity)
+        return "[!$Infinity$!]"
+    if (Number.isNaN(value))
+    {
+        console.error("NaN detected for key " + key)
+        return "[!$NaN$!]"
+    }
+    return value
+}
+
+const stringifyReplacer = (jsonstring)=>{
+    return jsonstring.replaceAll("\"[!$+Infinity$!]\"", "1e5000").replaceAll("\"[!$-Infinity$!]\"", "-1e5000").replaceAll("\"[!$NaN$!]\"", "0")
+}
+
+export const stringifyProperly = (jsonobject)=>{
+    return stringifyReplacer(JSON.stringify(jsonobject,stringifyFixer))
+}

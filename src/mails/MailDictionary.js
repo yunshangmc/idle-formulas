@@ -360,7 +360,7 @@ export const mailDictionary = {
         id: "Stones",
         title: "Stones",
         content: <>I heard you found a rare stone? I do not know what it is and what to do with it. But you can find your stones on the Alpha tab. Feel free to experiment with them, though I am not sure if they will turn out to be useful for anything.</>,
-        responses: [<>UNLOCK STONES</>],
+        responses: [<>UNLOCK STARTING STONES</>],
         sender: "Academy",
         check: (state)=>(Object.keys(state.startingStoneTurned).length > 0),
         delay: 380,

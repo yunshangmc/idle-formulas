@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer} from 'react'
 
 import './App.css';
 import {saveReducer, getSaveGame} from './savestate'
-import {formatNumber} from './utilities'
+import {formatNumber, spaces} from './utilities'
 import TabContent from './TabContent'
 import FormulaScreen from './formulas/FormulaScreen'
 import OptionScreen from './OptionScreen'
@@ -80,9 +80,21 @@ function App() {
     <AutoSave saveState={state}/>
     <PopupDialog popupState={popupState} setPopupState={setPopupState}/>
     <KeyBoardHandler state={state} updateState={updateState} popup={popup}/>
+    {state.settings.headerDisplay === "VERTICAL" && <div style={{fontSize: "24px", fontWeight:"bold", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>
+      <div>x&nbsp;=&nbsp;{formatNumber(state.xValue[0], state.settings.numberFormat, 6, false, false)}</div>
+      <div>&alpha;&nbsp;=&nbsp;{formatNumber(state.alpha, state.settings.numberFormat, 6, false, false)}</div>
+      <div style={{marginTop:"-4px"}}>&#9733;&nbsp;=&nbsp;{formatNumber(state.destinyStars, state.settings.numberFormat, 6, false, false)}</div>
+      <div>&lambda;&nbsp;=&nbsp;{formatNumber(state.starLight, state.settings.numberFormat, 6, false, false)}</div>
+    </div>}
+    {state.settings.headerDisplay === "HORIZONTAL" && <div style={{fontSize: "24px", fontWeight:"bold", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>
+      <span>x&nbsp;=&nbsp;{formatNumber(state.xValue[0], state.settings.numberFormat, 6, false, false)}{spaces()}</span>
+      {state.progressionLayer >= 1 && <span>&alpha;&nbsp;=&nbsp;{formatNumber(state.alpha, state.settings.numberFormat, 6, false, false)}{spaces()}</span>}
+      {state.destinyStars >= 1 && <span style={{marginTop:"-4px"}}>&#9733;&nbsp;=&nbsp;{formatNumber(state.destinyStars, state.settings.numberFormat, 6, false, false)}{spaces()}</span>}
+      {state.destinyStars >= 1 && <span>&lambda;&nbsp;=&nbsp;{formatNumber(state.starLight, state.settings.numberFormat, 6, false, false)}{spaces()}</span>}
+    </div>}
     {state.settings.headerDisplay === "X" && <h1 style={{fontSize: "40px", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>x&nbsp;=&nbsp;{formatNumber(state.xValue[0], state.settings.numberFormat, 6, false, false)}</h1>}
     {state.settings.headerDisplay === "ALPHA" && <h1 style={{fontSize: "40px", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>&alpha;&nbsp;=&nbsp;{formatNumber(state.alpha, state.settings.numberFormat, 6, false, false)}</h1>}
-    {state.settings.headerDisplay === "STARS" && <h1 style={{fontSize: "40px", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>&#9733;&nbsp;=&nbsp;{formatNumber(state.destinyStars, state.settings.numberFormat, 6, false, false)}</h1>}
+    {state.settings.headerDisplay === "STARS" && <h1 style={{fontSize: "40px", marginLeft: "20px",marginBottom: "10px", textAlign:"left"}}>&#9733;&nbsp;=&nbsp;{formatNumber(state.destinyStars, state.settings.numberFormat, 6, false, false)}</h1>}
     {state.settings.headerDisplay === "STARLIGHT" && <h1 style={{fontSize: "40px", marginLeft: "20px", marginBottom: "10px", textAlign:"left"}}>&lambda;&nbsp;=&nbsp;{formatNumber(state.starLight, state.settings.numberFormat, 6, false, false)}</h1>}
     <TabContent selectedTabKey={state.selectedTabKey}>
       <FormulaScreen tabKey="FormulaScreen" popup={popup} state={state} updateState={updateState} setTotalClicks={setTotalClicks}/>

@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 
 import {destinyMileStoneList, milestoneList} from './AchievementScreen' 
 import {endingList} from './endings/EndingDictionary'
-import {getRewardInterval, notify, secondsToHms, getOfflinePopupLine} from './utilities'
+import {getRewardInterval, notify, secondsToHms, getOfflinePopupLine, stringifyProperly} from './utilities'
 import formulaList from './formulas/FormulaDictionary'
 import {shopFormulas} from './formulas/FormulaScreen'
 import {getUnlockMultiplier, isLockedByChallenge} from './formulas/FormulaButton'
@@ -12,7 +12,7 @@ import * as eventsystem from './mails/MailEventSystem'
 import * as progresscalculation from './progresscalculation'
 
 export const majorversion = 1
-export const version = "1.04"
+export const version = "1.05"
 export const productive = true
 export var invitation = "efHyDkqGRZ"
 
@@ -123,6 +123,8 @@ export const newSave = {
         showHints: "ON",
         hotKeys: "ON",
         shopScroll: "OFF",
+        advancedDisplayModes: "OFF",
+        challengeTabSwitch: "ON",
         shopFilter: "ALL",
         autoResetterS: "OFF",
         autoResetterA: "OFF",
@@ -218,7 +220,7 @@ export const getGlobalMultiplier = (state)=>{
 export const save = (state)=>{
     state.version = version
     state.saveTimeStamp = Date.now()
-    let currentgame = JSON.stringify({...state, holdAction:null})
+    let currentgame = stringifyProperly({...state, holdAction:null})
     const encodedGame = Buffer.from(currentgame).toString("base64");
     window.localStorage.setItem('majorversion', majorversion)
     window.localStorage.setItem('idleformulas_v' + majorversion, encodedGame)
@@ -316,8 +318,10 @@ const giveAlphaRewards = (state)=>{
         state.insideChallenge = false
         state.currentChallenge = null
         state.currentChallengeName = null
-        state.selectedTabKey = "AlphaScreen"
-        state.selectedAlphaTabKey = "AlphaChallengeTab"
+        if (state.settings.challengeTabSwitch === "ON") {
+            state.selectedTabKey = "AlphaScreen"
+            state.selectedAlphaTabKey = "AlphaChallengeTab"
+        }
         state = updateFormulaEfficiency(state)
     } else {
 
@@ -388,6 +392,8 @@ const rememberLoadout = (state, isManual)=>{
 }
 
 const upgradeXTier = (state)=>{
+    if (state.inNegativeSpace) return
+
     if (state.progressionLayer !== 0)
         state.xHighScores[state.highestXTier] = Math.max(state.xHighScores[state.highestXTier], state.xValue[0])
     state.highestXTier++
@@ -651,7 +657,7 @@ export const saveReducer = (state, action)=>{
             performAlphaReset(state)
             performShopReset(state)
             rememberLoadout(state)
-        } else if (!state.inNegativeSpace && state.settings.autoResetterS !== "OFF" && state.alphaUpgrades.SRES && state.xValue[0] >= differentialTargets[state.highestXTier]) {
+        } else if (!state.inNegativeSpace && state.highestXTier < 3 && state.settings.autoResetterS !== "OFF" && state.alphaUpgrades.SRES && state.xValue[0] >= differentialTargets[state.highestXTier]) {
             upgradeXTier(state)
             performShopReset(state)
             rememberLoadout(state)
@@ -673,7 +679,7 @@ export const saveReducer = (state, action)=>{
             let perSecond = [0,0,0,0]
             for(let i = 0; i < state.xValue.length; i++) {
                 perSecond[i] = deltaMilliSeconds ? (state.xValue[i] - xValuesBefore[i]) / (deltaMilliSeconds / 1000) : 0
-                // state.xPerSecond[i] = ((state.xPerSecond[i] || 0) + (state.xValue[i] - xValuesBefore[i])) / (1 + deltaMilliSeconds / 1000)
+                perSecond[i] = perSecond[i] || 0
             }
             state.xPerSecond.splice(0,1)
             state.xPerSecond.push(perSecond)
@@ -682,7 +688,7 @@ export const saveReducer = (state, action)=>{
                 history.sort((a,b)=>(a - b))
                 const newAvg = (history[2] + history[3] + history[4] + history[5] + history[6] + history[7]) / 6
                 state.avgXPerSecond[i] = (newAvg > state.avgXPerSecond[i] || newAvg < 0.9 * state.avgXPerSecond[i]) ? newAvg : state.avgXPerSecond[i]
-                //state.avgXPerSecond[i] = Math.max(state.xPerSecond[0][i], state.xPerSecond[1][i], state.xPerSecond[2][i], state.xPerSecond[3][i])
+                state.avgXPerSecond[i] = state.avgXPerSecond[i] || 0
             }
         }
 
@@ -924,7 +930,9 @@ export const saveReducer = (state, action)=>{
         if (!state.clearedChallenges[action.challenge.id])
             state.highestXTier = state.challengeProgress[action.challenge.id] || 0
         rememberLoadout(state)
-        state.selectedTabKey = "FormulaScreen"
+        if (state.settings.challengeTabSwitch === "ON") {
+            state.selectedTabKey = "FormulaScreen"
+        }
         break;
     case "exitChallenge":
         performAlphaReset(state)

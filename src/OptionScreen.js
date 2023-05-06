@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 
-import {invitation, productive, save, version} from './savestate'
-import {spaces, notify, secondsToHms} from './utilities'
+import {invitation, newSave, productive, save, version} from './savestate'
+import {spaces, notify, secondsToHms, stringifyProperly} from './utilities'
 import MultiOptionButton from './MultiOptionButton'
 import DropdownOptionButton from "./DropdownOptionButton";
 
@@ -24,7 +24,7 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
   // }
 
   const exportGame = ()=>{
-    const encodedState = Buffer.from(JSON.stringify(state)).toString("base64");
+    const encodedState = Buffer.from(stringifyProperly(state)).toString("base64");
     navigator.clipboard.writeText(encodedState);
     notify.success("Copied to Clipboard")
   }
@@ -33,7 +33,8 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
     const encodedState = window.prompt("Paste your save here:");
     if (encodedState && (!state.mileStoneCount || window.confirm("This will overwrite your current save! Are you sure?"))){
       const decodedState = JSON.parse(Buffer.from(encodedState,"base64").toString())
-      updateState({name: "load", state: decodedState})
+      const stateToLoad = {...structuredClone(newSave), ...decodedState, settings:{...structuredClone(newSave.settings), ...decodedState.settings}, saveTimeStamp: Date.now(), currentEnding: decodedState.currentEnding, justLaunched: true}
+      updateState({name: "load", state: stateToLoad})
       setTotalClicks((x)=>x+1)
       notify.success("Save Imported")
     }
@@ -79,7 +80,7 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
           description="Offline Progress" tooltip="Controls whether the game calculates progress for offline/inactive time" tooltipList={["Always get offline progress","No offline progress upon load, but inactive periods (minimized tab etc) are considered", "No offline progress, not even after inactive (minimized tab etc) periods of 2+ minutes"]}/> */}
       </p>
       {(state.destinyStars > 1 || state.progressionLayer > 0) && <p>
-        {spaces()}<DropdownOptionButton settingName="headerDisplay" statusList={["X","ALPHA",state.destinyStars > 1 && "STARS",state.destinyStars > 1 && "STARLIGHT", "OFF"].filter((x)=>x)} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+        {spaces()}<DropdownOptionButton settingName="headerDisplay" statusList={["X","ALPHA",state.destinyStars > 1 && "STARS",state.destinyStars > 1 && "STARLIGHT", "VERTICAL", "HORIZONTAL", "OFF"].filter((x)=>x)} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
           description="Header Display" tooltip="Controls display at the top of the site"/>
       </p>}
       <p>
@@ -91,7 +92,16 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
       </p><p>
         {spaces()}<MultiOptionButton settingName="shopScroll" statusList={["ON","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
           description="Shop Scrollbar" tooltip="Controls whether the formula shop has a separate scroll bar" tooltipList={["Shop has a scroll bar","Shop does not have a scroll bar."]}/>
-      </p><p>
+      </p>
+      {(state.destinyStars > 1 || state.mailsCompleted["Favorites"] !== undefined) && <p>
+        {spaces()}<MultiOptionButton settingName="advancedDisplayModes" statusList={["OFF","ON"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+          description="Advanced Display Modes" tooltip="Enables some additional options for filtering the formula shop" tooltipList={["Does not show additional filters","Shows all additional filters."]}/>
+      </p>}
+      {(state.destinyStars > 1 || state.mailsCompleted["Challenges"] !== undefined) && <p>
+        {spaces()}<MultiOptionButton settingName="challengeTabSwitch" statusList={["ON","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+          description="Challenge Tab Switch" tooltip="Controls whether automatic tab switch occurs when starting or finishing a challenge" tooltipList={["Tab is switched automatically","Tab is not switched automatically."]}/>
+      </p>}
+      <p>
            {/* {spaces()}<MultiOptionButton settingName="showHints" statusList={["ON", "OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
           description="Show Hints" tooltip="Controls whether hints are shown" tooltipList={["Hints are shown", "Hints are not shown"]}/>
         {spaces()}<MultiOptionButton settingName="hotKeys" statusList={["ON", "OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
@@ -118,8 +128,8 @@ export default function OptionScreen({state, popup, updateState, setTotalClicks}
           description="Decreasing Formula Pop-Up" tooltip="Controls whether the confirmation popup for decreasing an X-Value is shown" tooltipList={["Show popup","Do not show popup"]}/>
         </p>
         <p>
-          {spaces()}<MultiOptionButton settingName="xResetPopup" statusList={["ON","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
-            description="Basic Reset Pop-Up" tooltip="Controls whether the confirmation popup for Basic Resets is shown" tooltipList={["Show popup","Do not show popup"]}/>
+          {spaces()}<MultiOptionButton settingName="xResetPopup" statusList={["ON","OFF","SMART","SAFE"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}
+            description="Basic Reset Pop-Up" tooltip="Controls whether the confirmation popup for Basic Resets is shown" tooltipList={["Show popup","Do not show popup","Only show popup when formula unlocks etc possible","Shows two popups when formula unlocks etc possible"]}/>
         </p>
         {(state.destinyStars > 1 || state.progressionLayer > 0) && <p>
           {spaces()}<MultiOptionButton settingName="shopResetPopup" statusList={["ON","OFF"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks}

@@ -57,18 +57,21 @@ export const shopFormulas=[
 
 export default function FormulaScreen({state, updateState, setTotalClicks, popup}) {
     const resetXValues = ()=>{
-      popup.confirm("Your x values are reset, but you can change your equipped formulas.",()=>{
+      const isProgressAvailable = state.xValue[0] >= nextUnlockCost || state.xValue[0] >= differentialTarget || state.xValue[0] >= alphaTarget
+      popup.confirm("Your X values are reset, but you can change your equipped formulas.",()=>{
+        popup.confirm("Your x is high enough to unlock something or progress instead. Do you still want to do a Basic Research?",()=>{
           updateState({name: "resetXValues"})
           setTotalClicks((x)=>x+1)
-      }, state.settings.xResetPopup === "OFF")
+        }, state.settings.xResetPopup === "OFF" || state.settings.xResetPopup === "ON" || !isProgressAvailable)
+      }, state.settings.xResetPopup === "OFF" || state.settings.xResetPopup === "SMART")
     }
     
     const resetShop = ()=>{
       const shopMultipliers = [4, 12, 8000, 1]
       const shopMultiplier = shopMultipliers[state.highestXTier]
       popup.confirm("A new differential of x and its formulas become available, but the shop is reset and the unlock cost for all non-basic formulas is " + shopMultiplier + " times as high.",()=>{
-        updateState({name: "upgradeXTier"})
-        setTotalClicks((x)=>x+1)
+          updateState({name: "upgradeXTier"})
+          setTotalClicks((x)=>x+1)
       }, state.settings.shopResetPopup === "OFF")
     }
     
@@ -155,6 +158,18 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
         break;
       case "HIDDEN":
         displayFilter = (formulaName)=>(state.shopFavorites[state.highestXTier][formulaName] === -1) //Only Hidden
+        break;
+      case "X":
+        displayFilter = (formulaName)=>(formulaList[formulaName].targetLevel === 0 && state.shopFavorites[state.highestXTier][formulaName] !== -1) //Non-Hidden X
+        break;
+      case "X'":
+        displayFilter = (formulaName)=>(formulaList[formulaName].targetLevel === 1 && state.shopFavorites[state.highestXTier][formulaName] !== -1) //Non-Hidden X'
+        break;
+      case "X''":
+        displayFilter = (formulaName)=>(formulaList[formulaName].targetLevel === 2 && state.shopFavorites[state.highestXTier][formulaName] !== -1) //Non-Hidden X''
+        break;
+      case "X'''":
+        displayFilter = (formulaName)=>(formulaList[formulaName].targetLevel === 3 && state.shopFavorites[state.highestXTier][formulaName] !== -1) //Non-Hidden X'''
         break;
       default: //ALL + EDIT
         break;
@@ -250,7 +265,7 @@ export default function FormulaScreen({state, updateState, setTotalClicks, popup
             {hashtagE && <>#E = {formatNumber(state.myFormulas.length, state.settings.numberFormat, 3)}&nbsp;&nbsp;(Equipped Formulas)<br/></>}
         </div><div className="column">
         <h2 style={{marginTop:"0px"}}>Shop {state.myFormulas.length >= getInventorySize(state) && <>{spaces()}[FULL INVENTORY]</>}</h2>
-          {state.mailsCompleted["Favorites"] !== undefined && <p><DropdownOptionButton visible={true} settingName="shopFilter" statusList={["DEFAULT","ALL","FAVORITES","HIDDEN","EDIT"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks} description="Display Mode"/></p>}
+          {state.mailsCompleted["Favorites"] !== undefined && <p><DropdownOptionButton visible={true} settingName="shopFilter" statusList={state.settings.advancedDisplayModes === "ON" ? ["DEFAULT","ALL","FAVORITES","HIDDEN","X","X'","X''","X'''","EDIT"] : ["DEFAULT","ALL","FAVORITES","HIDDEN","EDIT"]} state={state} updateState={updateState} setTotalClicks={setTotalClicks} description="Display Mode"/></p>}
           <div style={state.settings.shopScroll === "ON" ? {overflow:"auto", height:"70vh"} : {}}>
             <FormulaTable state={state} updateState={updateState} popup={popup} setTotalClicks={setTotalClicks} formulaNames={shopFormulas.filter(displayFilter)}/>
           </div>
