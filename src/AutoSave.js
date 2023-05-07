@@ -1,32 +1,36 @@
 import React from "react";
 
-import {save} from './savestate'
+import { save } from "./savestate";
 
 //Tries to save the game right before the tab is closed
-class AutoSave extends React.Component{
-  constructor(props){
+class AutoSave extends React.Component {
+  constructor(props) {
     super(props);
-    this.onUnload = this.onUnload.bind(this)
-    this.save = save
+    this.onUnload = this.onUnload.bind(this);
+    this.save = save;
   }
 
-  onUnload(e){
-    if (this.props.saveState.settings.autoSave === "ON" && (this.props.saveState.mileStoneCount > 0 || this.props.saveState.destinyStars > 0)) {
-      this.save(this.props.saveState)
+  onUnload(e) {
+    if (
+      this.props.saveState.settings.autoSave === "ON" &&
+      (this.props.saveState.mileStoneCount > 0 ||
+        this.props.saveState.destinyStars > 0)
+    ) {
+      this.save(this.props.saveState);
     }
   }
 
-  render(){
-    return undefined
+  render() {
+    return undefined;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     window.addEventListener("beforeunload", this.onUnload);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     window.removeEventListener("beforeunload", this.onUnload);
   }
 }
- 
+
 export default AutoSave;
