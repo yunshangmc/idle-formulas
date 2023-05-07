@@ -5,7 +5,7 @@ import {
   getMaxxedResearchBonus,
 } from "../savestate";
 import { formatNumber } from "../utilities";
-const researchDictonary = {
+export const researchDictonary = {
   x: {
     id: "x",
     durationStart: differentialTargets[0] * 5,

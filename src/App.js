@@ -15,6 +15,7 @@ import AutoSave from "./AutoSave";
 import { PopupDialog, makeShowPopup } from "./PopupDialog";
 import EndingSelectionScreen from "./endings/EndingSelectionScreen";
 import KeyBoardHandler from "./KeyBoardHandler";
+import { StartAutoResearch } from "./alpha/AlphaAutoResearch";
 
 function App() {
   const [playTime, setPlayTime] = useState(0);
@@ -31,6 +32,11 @@ function App() {
     saveReducer,
     playTime === 0 && getSaveGame()
   );
+
+  useEffect(() => {
+    const id = StartAutoResearch(state, updateState);
+    return () => clearInterval(id);
+  }, [state]);
 
   const popup = makeShowPopup(popupState, setPopupState);
 

@@ -11,6 +11,7 @@ const alphaUpgradeTable = [
   "FREF",
   "SAPP",
   "OAPP",
+  "AURE",
   "BR2",
   "AUNL",
   "MEEQ",
@@ -31,14 +32,13 @@ export default function AlphaScreen({
   const alphaUpgradeDictionary = {
     AAPP: {
       id: "AAPP",
-      title: "Auto Applier",
+      title: "Auto Applier (free)",
       description:
         "Applies a formula for you twice per second, if beneficial. Rate can be further upgraded.",
-      cost: 1,
+      cost: 0,
     },
     FREF: {
       id: "FREF",
-      requires: "AAPP",
       title: "Formula Refund",
       description: "Applying formulas does not reduce x.",
       cost: 2,
@@ -122,23 +122,17 @@ export default function AlphaScreen({
     BR2: {
       fixed: <br />,
     },
+    AURE: {
+      id: "AURE",
+      requires: "OAPP",
+      title: "Auto Research",
+      description: "Automatically starts researches.",
+      cost: 1000,
+    },
   };
 
-  const applierRates = [2, 5, 10, 10];
-  const applierCosts = [1, 3, 10, Infinity];
-  const applierLevel = state.autoApplyLevel;
   let boughtSomething = false;
 
-  const upgradeApplierRate = () => {
-    if (boughtSomething || state.alpha < applierCosts[applierLevel + 1]) return;
-    boughtSomething = true;
-    updateState({
-      name: "upgradeApplierRate",
-      level: applierLevel + 1,
-      rate: applierRates[applierLevel + 1],
-      cost: applierCosts[applierLevel + 1],
-    });
-  };
   const baseAlphaMultiplier = Math.pow(2, state.baseAlphaLevel);
   const baseAlphaUpgradeCost = Math.pow(5, state.baseAlphaLevel + 1);
   const upgradeBaseAlpha = () => {
@@ -218,20 +212,6 @@ export default function AlphaScreen({
                 )}
               </p>
             ))}
-          {state.alphaUpgrades.AAPP && (
-            <p>
-              Auto Applier Rate: {state.autoApplyRate}/s{spaces()}
-              {applierLevel < 2 && (
-                <button
-                  style={{ color: "black" }}
-                  disabled={state.alpha < applierCosts[applierLevel + 1]}
-                  onClick={upgradeApplierRate}
-                >
-                  Upgrade for {applierCosts[applierLevel + 1]} &alpha;
-                </button>
-              )}
-            </p>
-          )}
           <p>
             Base &alpha;-Reset Tokens:{" "}
             {formatNumber(baseAlphaMultiplier, state.settings.numberFormat, 2)}
