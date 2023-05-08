@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/idleformulas/static/css/main.5693c3f9.css",
+    "main.js": "/idleformulas/static/js/main.a9815116.js",
+    "index.html": "/idleformulas/index.html",
+    "main.5693c3f9.css.map": "/idleformulas/static/css/main.5693c3f9.css.map",
+    "main.a9815116.js.map": "/idleformulas/static/js/main.a9815116.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5693c3f9.css",
+    "static/js/main.a9815116.js"
+  ]
+}

@@ -1,0 +1,239 @@
+import { spaces, secondsToHms, formatNumber } from "../utilities";
+import AlphaUpgradeButton from "./AlphaUpgradeButton";
+
+const alphaUpgradeTable = [
+  "SLOT",
+  "PALP",
+  "SRES",
+  "ARES",
+  "BR1",
+  "AAPP",
+  "FREF",
+  "SAPP",
+  "OAPP",
+  "AURE",
+  "BR2",
+  "AUNL",
+  "MEEQ",
+  "AREM",
+  "MEMS",
+];
+
+export const countAlphaUpgrades = (state) => {
+  return alphaUpgradeTable.filter((x) => state.alphaUpgrades[x]).length;
+};
+
+export default function AlphaScreen({
+  state,
+  updateState,
+  popup,
+  setTotalClicks,
+}) {
+  const alphaUpgradeDictionary = {
+    AAPP: {
+      id: "AAPP",
+      title: "Auto Applier (free)",
+      description:
+        "Applies a formula for you twice per second, if beneficial. Rate can be further upgraded.",
+      cost: 0,
+    },
+    FREF: {
+      id: "FREF",
+      title: "Formula Refund",
+      description: "Applying formulas does not reduce x.",
+      cost: 2,
+    },
+    SAPP: {
+      id: "SAPP",
+      requires: "FREF",
+      title: "Super Applier",
+      description: "Auto Applier can handle multiple formulas simultaneously.",
+      cost: 4,
+    },
+    OAPP: {
+      id: "OAPP",
+      requires: "SAPP",
+      title: "Offline Applier",
+      description: "Auto Applier works offline.",
+      cost: 1000,
+    },
+    AUNL: {
+      id: "AUNL",
+      title: "Auto Unlocker",
+      description:
+        "Automatically unlocks formulas. Unlocking formulas does not reduce x.",
+      cost: 1,
+    },
+    MEEQ: {
+      id: "MEEQ",
+      requires: "AUNL",
+      title: "Memorize Equip",
+      description:
+        "One Equipment loadout can be saved and loaded for each stage.",
+      cost: 2,
+    },
+    AREM: {
+      id: "AREM",
+      requires: "MEEQ",
+      title: "Auto Rememberer",
+      description:
+        "Memorized equipment is automatically loaded when differentials are unlocked.",
+      cost: 4,
+    },
+    MEMS: {
+      id: "MEMS",
+      requires: "AREM",
+      title: "Better Memory",
+      description: "Up to three different Equipment loadouts can be saved.",
+      cost: 10000,
+    },
+    SLOT: {
+      id: "SLOT",
+      title: "Formula Slot",
+      description: "Grants an additional formula equipment slot.",
+      cost: 1,
+    },
+    PALP: {
+      id: "PALP",
+      requires: "SLOT",
+      title: "Passive Alpha",
+      description:
+        "Gain Alpha Tokens passively in Intervals of the fastest Alpha-Reset (min 1/day). Works offline!",
+      cost: 2,
+    },
+    SRES: {
+      id: "SRES",
+      requires: "PALP",
+      title: "X Resetter",
+      description: "Automatically performs x-Resets.",
+      cost: 4,
+    },
+    ARES: {
+      id: "ARES",
+      requires: "SRES",
+      title: "Alpha Resetter",
+      description:
+        "Automatically performs Alpha-Resets. Can also complete Challenges.",
+      cost: 100,
+    },
+    BR1: {
+      fixed: <br />,
+    },
+    BR2: {
+      fixed: <br />,
+    },
+    AURE: {
+      id: "AURE",
+      requires: "OAPP",
+      title: "Auto Research",
+      description: "Automatically starts researches.",
+      cost: 1000,
+    },
+  };
+
+  let boughtSomething = false;
+
+  const baseAlphaMultiplier = Math.pow(2, state.baseAlphaLevel);
+  const baseAlphaUpgradeCost = Math.pow(5, state.baseAlphaLevel + 1);
+  const upgradeBaseAlpha = () => {
+    if (boughtSomething || state.alpha < baseAlphaUpgradeCost) return;
+    boughtSomething = true;
+    updateState({
+      name: "upgradeBaseAlpha",
+      level: state.baseAlphaLevel + 1,
+      cost: baseAlphaUpgradeCost,
+    });
+  };
+
+  return (
+    <div style={{ marginLeft: "20px" }}>
+      {
+        <>
+          <h2>Alpha Upgrades</h2>
+          {alphaUpgradeTable.map((upgrade) => (
+            <AlphaUpgradeButton
+              key={upgrade}
+              upgrade={alphaUpgradeDictionary[upgrade]}
+              state={state}
+              popup={popup}
+              updateState={updateState}
+            />
+          ))}
+          <br />
+          <br />
+          <h2>Info</h2>
+          <p>
+            You have {formatNumber(state.alpha, state.settings.numberFormat, 2)}{" "}
+            Alpha Token{state.alpha !== 1 && "s"}!
+          </p>
+          <p>
+            Time in current Alpha run:{" "}
+            {secondsToHms(state.currentAlphaTime / 1000)}
+            {state.isFullyIdle && <> (Fully Idle)</>}
+          </p>
+          {state.bestAlphaTime < 1e50 && (
+            <p>
+              Fastest Alpha run:{" "}
+              {secondsToHms(state.bestAlphaTime / 1000, true)}
+            </p>
+          )}
+          {state.clearedChallenges.FULLYIDLE && (
+            <>
+              <p>
+                Best Fully Idle:{" "}
+                {formatNumber(
+                  state.bestIdleTimeAlpha,
+                  state.settings.numberFormat,
+                  2
+                )}
+                &alpha; in {secondsToHms(state.bestIdleTime / 1000, true)}
+              </p>
+            </>
+          )}
+          {state.alphaUpgrades.PALP &&
+            (state.passiveAlphaInterval <= 1000 ? (
+              <p>
+                Passive Alpha Tokens:{" "}
+                {formatNumber(
+                  Math.floor(1000 / state.passiveAlphaInterval),
+                  state.settings.numberFormat,
+                  2
+                )}
+                /s
+              </p>
+            ) : (
+              <p>
+                Next Passive Alpha Token:{" "}
+                {secondsToHms(
+                  Math.max(
+                    0,
+                    (state.passiveAlphaInterval - state.passiveAlphaTime) / 1000
+                  )
+                )}
+              </p>
+            ))}
+          <p>
+            Base &alpha;-Reset Tokens:{" "}
+            {formatNumber(baseAlphaMultiplier, state.settings.numberFormat, 2)}
+            &nbsp;&nbsp;
+            {state.baseAlphaLevel < 12 && (
+              <button
+                style={{ color: "black" }}
+                disabled={state.alpha < baseAlphaUpgradeCost}
+                onClick={upgradeBaseAlpha}
+              >
+                Double for{" "}
+                {formatNumber(
+                  baseAlphaUpgradeCost,
+                  state.settings.numberFormat,
+                  2
+                )}{" "}
+                &alpha;
+              </button>
+            )}
+          </p>
+        </>
+      }
+    </div>
+  );
+}
